@@ -2,6 +2,7 @@ package com.example.User_Service.api.controller;
 
 import com.example.User_Service.api.dto.response.UserInfoDto;
 import com.example.User_Service.application.service.UserService;
+import com.example.User_Service.common.util.GatewayRequestHeaderUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,17 +23,15 @@ public class UserController {
 
     @Operation(summary = "사용자 정보 수정", description = "현재 로그인된 사용자의 정보를 수정합니다.")
     @PutMapping("/user")
-    public ResponseEntity<UserInfoDto> updateUser(
-            //@Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody UserInfoDto request){
+    public ResponseEntity<UserInfoDto> updateUser(@RequestBody UserInfoDto request){
+        Long userId = GatewayRequestHeaderUtils.getUserId();
         return ResponseEntity.ok(userService.updateUserInfo(request,1L )); // gateway id 넘겨야함
     }
 
     @Operation(summary = "회원 탈퇴", description = "현재 로그인된 사용자의 계정을 탈퇴 처리합니다.")
     @DeleteMapping("/user")
-    public ResponseEntity<String> deleteUser(
-            //@Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principalDetails
-             ){
+    public ResponseEntity<String> deleteUser(){
+        Long userId = GatewayRequestHeaderUtils.getUserId();
         return ResponseEntity.ok(userService.deleteUser(1L));
     }
 }

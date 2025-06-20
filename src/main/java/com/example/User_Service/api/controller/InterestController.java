@@ -3,6 +3,7 @@ package com.example.User_Service.api.controller;
 import com.example.User_Service.api.dto.request.InterestRequestDto;
 import com.example.User_Service.api.dto.response.InterestResponseDto;
 import com.example.User_Service.application.service.InterestService;
+import com.example.User_Service.common.util.GatewayRequestHeaderUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class InterestController {
     @Operation(summary = "사용자 관심사 조회", description = "특정 사용자의 관심사 목록을 조회합니다.")
     @GetMapping("/interest/{userId}")
     public ResponseEntity<List<InterestResponseDto>> getInterests(@PathVariable Long userId) {
+        Long Id = GatewayRequestHeaderUtils.getUserId();
         List<InterestResponseDto> list = interestService.getInterests(userId);
         return ResponseEntity.ok(list);
     }
@@ -36,6 +38,7 @@ public class InterestController {
     public ResponseEntity<Void> removeInterest(
             @PathVariable Long userId,
             @RequestBody InterestRequestDto dto) {
+        Long Id = GatewayRequestHeaderUtils.getUserId();
         dto.setUserId(userId);
         interestService.removeInterest(dto);
         return ResponseEntity.noContent().build();
