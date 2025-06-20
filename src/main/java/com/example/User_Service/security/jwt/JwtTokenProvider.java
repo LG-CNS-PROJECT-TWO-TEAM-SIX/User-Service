@@ -26,7 +26,7 @@ public class JwtTokenProvider {
         Date accessTokenExpirationTime = new Date(now.getTime() + TOKEN_VALID_TIME);
 
         Claims claims = Jwts.claims();
-        claims.put("userId", userId);
+        claims.put("userId", String.valueOf(userId));
         claims.put("tokenType", "access");
 
         return Jwts.builder()
@@ -42,7 +42,7 @@ public class JwtTokenProvider {
         Date refreshTokenExpirationTime = new Date(now.getTime() + REF_TOKEN_VALID_TIME);
 
         Claims claims = Jwts.claims();
-        claims.put("userId", userId);
+        claims.put("userId", String.valueOf(userId));
         claims.put("tokenType", "refresh");
 
         return Jwts.builder()

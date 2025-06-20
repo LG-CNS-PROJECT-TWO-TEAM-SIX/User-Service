@@ -17,8 +17,9 @@ public class UserController {
     private final UserService userService;
 
     @Operation(summary = "사용자 정보 조회", description = "사용자의 ID를 기반으로 사용자 정보를 조회합니다.")
-    @GetMapping("/user/{id}")
-    public ResponseEntity<ApiResponse> getUser(@PathVariable Long id){
+    @GetMapping("/user")
+    public ResponseEntity<ApiResponse> getUser(){
+        Long id = GatewayRequestHeaderUtils.getUserId();
         return ResponseEntity.ok(ApiResponse.success(userService.getUserInfo(id)));
     }
 
@@ -26,13 +27,13 @@ public class UserController {
     @PutMapping("/user")
     public ResponseEntity<ApiResponse> updateUser(@RequestBody UserInfoDto request){
         Long userId = GatewayRequestHeaderUtils.getUserId();
-        return ResponseEntity.ok(ApiResponse.success("회원정보 수정 완료!",userService.updateUserInfo(request,1L ))); // gateway id 넘겨야함
+        return ResponseEntity.ok(ApiResponse.success("회원정보 수정 완료!",userService.updateUserInfo(request,userId ))); // gateway id 넘겨야함
     }
 
     @Operation(summary = "회원 탈퇴", description = "현재 로그인된 사용자의 계정을 탈퇴 처리합니다.")
     @DeleteMapping("/user")
     public ResponseEntity<ApiResponse> deleteUser(){
         Long userId = GatewayRequestHeaderUtils.getUserId();
-        return ResponseEntity.ok(ApiResponse.success("회원탈퇴 성공!",userService.deleteUser(1L)));
+        return ResponseEntity.ok(ApiResponse.success("회원탈퇴 성공!",userService.deleteUser(userId)));
     }
 }
