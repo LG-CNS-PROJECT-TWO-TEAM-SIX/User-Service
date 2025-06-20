@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: user-service
+
+  datasource:
+    url: jdbc:mysql://localhost:13306/user?serverTimezone=UTC&useSSL=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: { mysql user name }
+    password: { mysql user password }
+
+  jpa:
+    hibernate:
+      ddl-auto: create  # 테스트 환경에서만 사용
+    generate-ddl: true  # 테스트 환경에서만 사용
+    show-sql: true
+    open-in-view: false
+
+  kafka:
+    listener:
+      ack-mode: manual_immediate
+    consumer:
+      group-id: ${spring.application.name}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      enable-auto-commit: false
+      auto-offset-reset: latest
+      max-poll-records: 10
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.use.type.headers: false  # 헤더의 타입 정보 무시
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false  # 타입 헤더 추가 비활성화
+
+  eureka:
+    instance:
+      prefer-ip-address: true
+      lease-renewal-interval-in-seconds: 10 # 하트비트 간격(기본 30초)
+      lease-expiration-duration-in-seconds: 30 # 만료 시간(기본 90초)
+    client:
+      register-with-eureka: true
+      fetch-registry: true
+      serviceUrl:
+        defaultZone: http://localhost:8761/eureka/
+jwt:
+  secret: "AADfaskllew32dsfasdTG764Gdslkj298GsWg86GAADfaskllew32dsfasdTG764Gdslkj298GsWg86G"
+
