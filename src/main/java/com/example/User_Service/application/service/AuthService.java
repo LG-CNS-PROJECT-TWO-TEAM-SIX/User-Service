@@ -17,6 +17,7 @@ import com.example.User_Service.domain.repository.UserRepository;
 import com.example.User_Service.infrastructure.kafka.UserEventProducer;
 import com.example.User_Service.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
@@ -38,6 +40,8 @@ public class AuthService {
     public UserLoginResponse login(UserLoginRequest body) {
         String email = body.getEmail();
         String password = body.getPassword();
+        log.info(body.getEmail());
+        log.info(body.getPassword());
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         if (!passwordUtil.matches(password, user.getPassword()))

@@ -35,14 +35,14 @@ public class AuthController {
 
     @Operation(summary = "이메일 중복 확인", description = "이메일이 이미 존재하는지 확인합니다.")
     @PostMapping("/email")
-    public ResponseEntity<CheckEmailResponse> checkEmail(@RequestBody CheckEmailRequest request){
-        return ResponseEntity.ok(authService.isEmailExist(request.getEmail()));
+    public ResponseEntity<ApiResponse> checkEmail(@RequestBody CheckEmailRequest request){
+        return ResponseEntity.ok(ApiResponse.success(authService.isEmailExist(request.getEmail())));
     }
 
     @Operation(summary = "새로운 액세스 토큰 발급", description = "리프레시 토큰을 통해 새로운 액세스 토큰을 발급받습니다.")
     @PostMapping("/token")
-    public ResponseEntity<CreateNewAccessTokenResponse> createNewAccessToken(@RequestHeader(value = "refreshToken") String refreshToken){
-        return ResponseEntity.ok(authService.createNewAccessToken(refreshToken));
+    public ResponseEntity<ApiResponse> createNewAccessToken(@RequestHeader(value = "refreshToken") String refreshToken){
+        return ResponseEntity.ok(ApiResponse.success(authService.createNewAccessToken(refreshToken)));
     }
 
     @Operation(summary = "로그아웃", description = "리프레시 토큰을 삭제하여 로그아웃을 처리합니다.")
