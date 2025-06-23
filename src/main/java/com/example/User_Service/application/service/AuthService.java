@@ -40,8 +40,7 @@ public class AuthService {
     public UserLoginResponse login(UserLoginRequest body) {
         String email = body.getEmail();
         String password = body.getPassword();
-        log.info(body.getEmail());
-        log.info(body.getPassword());
+
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         if (!passwordUtil.matches(password, user.getPassword()))

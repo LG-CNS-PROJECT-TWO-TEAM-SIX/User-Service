@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/user/v1")
 @Tag(name = "Interest API", description = "사용자 관심사 관련 API")
 public class InterestController {
     private final InterestService interestService;
