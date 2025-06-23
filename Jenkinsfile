@@ -1,4 +1,3 @@
-#!/usr/bin/env groovy
 def APP_NAME
 def APP_VERSION
 def DOCKER_IMAGE_NAME
