@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-user-service
+  namespace: default
+  labels:
+    app: backend-user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-user-service
+  template:
+    metadata:
+      labels:
+        app: backend-user-service
+      annotations:
+        kubectl.kubernetes.io/restartedAt: '2025-06-23T08:28:27Z'
+    spec:
+      volumes:
+        - name: backend-user-config-volume
+          configMap:
+            name: backend-user-config
+            items:
+              - key: application-dev.yml
+                path: application-dev.yml
+            defaultMode: 420
+        - name: backend-user-secret-volume
+          secret:
+            secretName: backend-user-secret
+            items:
+              - key: application-secret.yml
+                path: application-secret.yml
+            defaultMode: 420
+      containers:
+        - name: backend-user-service
+          image: haribonyam/user-service:0.0.2
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: dev
+          volumeMounts:
+            - name: backend-user-config-volume
+              mountPath: /etc/config
+              readOnly: true
+            - name: backend-user-secret-volume
+              mountPath: /etc/secret
+              readOnly: true
+          imagePullPolicy: Always
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
