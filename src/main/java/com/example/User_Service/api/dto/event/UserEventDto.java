@@ -13,6 +13,7 @@ public class UserEventDto {
     public static final String Topic = "user";
     private String action;
     private String name;
+    private String email;
     private LocalDateTime eventTime;
 
 }

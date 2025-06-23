@@ -51,6 +51,7 @@ public class AuthService {
 
         UserEventDto message = UserEventDto.builder()
                 .eventTime(LocalDateTime.now())
+                .email(user.getEmail())
                 .name(user.getName())
                 .action("login")
                 .build();
@@ -83,6 +84,7 @@ public class AuthService {
         UserEventDto message = UserEventDto.builder()
                 .eventTime(LocalDateTime.now())
                 .action("register")
+                .email(user.getEmail())
                 .name(user.getName())
                 .build();
 
