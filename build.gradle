@@ -66,7 +66,8 @@ jar {
 
 tasks.register('getAppName') {
 	doLast {
-		println "${rootProject.name}" }
+		println "user-service"
+	}
 }
 
 tasks.register('getAppVersion') {
