@@ -69,7 +69,7 @@ public class UserService {
         UserEventDto message = UserEventDto.builder()
                 .eventTime(LocalDateTime.now())
                 .name(user.getName())
-                .action("delete")
+                .action("WITHDRAWAL")
                 .build();
 
         producer.send(UserEventDto.Topic, message);
