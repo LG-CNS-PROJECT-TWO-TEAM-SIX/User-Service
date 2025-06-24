@@ -17,25 +17,26 @@ import java.util.Date;
 public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String jwtPlainSecretKey;
+
     private volatile SecretKey jwtSecretKey;
+
     private SecretKey getSecretKey() {
         if (jwtSecretKey == null) {
             synchronized (this) {
                 if (jwtSecretKey == null) {
-                    jwtSecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtPlainSecretKey));}
+                    jwtSecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtPlainSecretKey));
+                }
             }
         }
         return jwtSecretKey;
     }
 
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String REFRESH_HEADER = "refreshToken";
-    private static final long TOKEN_VALID_TIME = 1000 * 60L * 60L * 24L;  // 유효기간 1일
-    private static final long REF_TOKEN_VALID_TIME = 1000 * 60L * 60L * 24L * 14L;  // 유효기간 14일
+    private static final long TOKEN_VALID_TIME = 1000 * 60L * 60L * 24L;  // 1일
+    private static final long REF_TOKEN_VALID_TIME = 1000 * 60L * 60L * 24L * 14L;  // 14일
 
     public String generateAccessToken(Long userId) {
         Date now = new Date();
-        Date accessTokenExpirationTime = new Date(now.getTime() + TOKEN_VALID_TIME);
+        Date expiration = new Date(now.getTime() + TOKEN_VALID_TIME);
 
         Claims claims = Jwts.claims();
         claims.put("userId", String.valueOf(userId));
@@ -43,15 +44,15 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(now) // 토큰 발행 시간 정보
-                .setExpiration(accessTokenExpirationTime)
-                .signWith(SignatureAlgorithm.HS256, jwtSecretKey)
+                .setIssuedAt(now)
+                .setExpiration(expiration)
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String generateRefreshToken(Long userId) {
         Date now = new Date();
-        Date refreshTokenExpirationTime = new Date(now.getTime() + REF_TOKEN_VALID_TIME);
+        Date expiration = new Date(now.getTime() + REF_TOKEN_VALID_TIME);
 
         Claims claims = Jwts.claims();
         claims.put("userId", String.valueOf(userId));
@@ -59,24 +60,30 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(now) // 토큰 발행 시간 정보
-                .setExpiration(refreshTokenExpirationTime)
-                .signWith(SignatureAlgorithm.HS256, jwtSecretKey)
+                .setIssuedAt(now)
+                .setExpiration(expiration)
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String getUserIdByToken(String token) {
-        return Jwts.parser().setSigningKey(jwtSecretKey).parseClaimsJws(token)
-                .getBody().get("userId").toString();
+        return Jwts.parserBuilder()
+                .setSigningKey(getSecretKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId", String.class);
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(jwtSecretKey).parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(getSecretKey())
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
-
 }
