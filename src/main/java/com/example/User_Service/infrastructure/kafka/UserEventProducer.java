@@ -1,6 +1,7 @@
 package com.example.User_Service.infrastructure.kafka;
 
 
+import com.example.User_Service.api.dto.event.UserEventDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -9,9 +10,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserEventProducer {
 
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, UserEventDto> kafkaTemplate;
 
-    public void send(String topic, Object message) {
+    public void send(String topic, UserEventDto message) {
         kafkaTemplate.send(topic, message);
     }
 }

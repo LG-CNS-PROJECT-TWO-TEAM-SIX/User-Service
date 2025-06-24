@@ -12,6 +12,7 @@ import com.example.User_Service.common.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Tag(name = "Auth API", description = "사용자 인증/인가 관련 API")
 @RequestMapping("/api/user/v1/auth")
+@Slf4j
 public class AuthController {
     private final AuthService authService;
 
