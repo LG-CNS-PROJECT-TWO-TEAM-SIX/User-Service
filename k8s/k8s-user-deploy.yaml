@@ -3,8 +3,6 @@ kind: Deployment
 metadata:
   name: backend-user-service
   namespace: default
-  labels:
-    app: backend-user-service
 spec:
   replicas: 1
   selector:
