@@ -37,9 +37,8 @@ public class InterestController {
 
     @Operation(summary = "사용자 관심사 조회", description = "특정 사용자의 관심사 목록을 조회합니다.")
     @GetMapping("/interest/{userId}")
-    public ResponseEntity<ApiResponse> getInterests(@PathVariable Long userId) {
-        List<InterestResponseDto> list = interestService.getInterests(userId);
-        return ResponseEntity.ok(ApiResponse.success(list));
+    public List<InterestResponseDto> getInterests(@PathVariable Long userId) {
+        return interestService.getInterests(userId);
     }
 
     @Operation(summary = "사용자 관심사 삭제", description = "특정 사용자의 관심사를 삭제합니다.")

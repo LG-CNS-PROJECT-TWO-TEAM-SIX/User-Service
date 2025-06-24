@@ -38,9 +38,8 @@ public class FavoriteController {
     }
     @Operation(summary = "좋아요한 뉴스 조회", description = "특정 사용자가 좋아요를 누른 뉴스 목록을 조회합니다.")
     @GetMapping("/favorites/{userId}")
-    public ResponseEntity<ApiResponse> getFavorites(@PathVariable Long userId) {
-        List<FavoriteResponseDto> list = favoriteService.getMyFavorites(userId);
-        return ResponseEntity.ok(ApiResponse.success(list));
+    public List<FavoriteResponseDto> getFavoritesForFeign(@PathVariable Long userId) {
+        return favoriteService.getMyFavorites(userId);
     }
 
     @Operation(summary = "뉴스 좋아요 취소", description = "좋아요를 누른 뉴스에 대해 좋아요를 취소합니다.")
