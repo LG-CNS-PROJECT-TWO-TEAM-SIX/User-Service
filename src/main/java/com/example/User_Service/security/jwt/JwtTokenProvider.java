@@ -3,18 +3,30 @@ package com.example.User_Service.security.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
     @Value("${jwt.secret}")
-    private String jwtSecretKey;
-
+    private String jwtPlainSecretKey;
+    private volatile SecretKey jwtSecretKey;
+    private SecretKey getSecretKey() {
+        if (jwtSecretKey == null) {
+            synchronized (this) {
+                if (jwtSecretKey == null) {
+                    jwtSecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtPlainSecretKey));}
+            }
+        }
+        return jwtSecretKey;
+    }
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String REFRESH_HEADER = "refreshToken";
@@ -66,4 +78,5 @@ public class JwtTokenProvider {
             return false;
         }
     }
+
 }
