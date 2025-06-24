@@ -23,6 +23,10 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AuthController {
     private final AuthService authService;
+    @GetMapping("/test")
+    public String test(){
+        return "good";
+    }
 
     @Operation(summary = "사용자 로그인", description = "이메일과 비밀번호를 입력받아 JWT 액세스/리프레시 토큰을 반환합니다.")
     @PostMapping("/login")
@@ -33,6 +37,7 @@ public class AuthController {
     @Operation(summary = "회원가입", description = "이름, 이메일, 비밀번호를 입력받아 회원가입을 진행합니다.")
     @PostMapping("/sign-up")
     public ResponseEntity<ApiResponse> signUp(@RequestBody UserSignUpRequest request){
+        log.info("Sign-up Request : {}. {}, {}. {}",request.getEmail(),request.getName(),request.getPassword(),request.getRole());
         return ResponseEntity.ok(ApiResponse.success("회원가입 성공!",authService.signUp(request))); //메세지와 데이터 함께 응답
     }
 

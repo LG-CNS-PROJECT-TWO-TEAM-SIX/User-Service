@@ -67,6 +67,8 @@ public class AuthService {
 
     @Transactional
     public UserSignUpResponse signUp(UserSignUpRequest body) {
+        if(userRepository.existsByEmail(body.getEmail())) throw new CustomException(ErrorCode.USER_DUPLICATED_ID);
+
         User user = User.builder()
                 .email(body.getEmail())
                 .name(body.getName())
