@@ -69,6 +69,7 @@ public class UserService {
         UserEventDto message = UserEventDto.builder()
                 .eventTime(LocalDateTime.now())
                 .name(user.getName())
+                .email(user.getEmail())
                 .action("WITHDRAWAL")
                 .build();
 
